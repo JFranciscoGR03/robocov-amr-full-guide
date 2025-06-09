@@ -7,7 +7,7 @@
 ## Colaboradores
 
 - [Jennifer Lizeth Avendaño Sánchez](https://github.com/jennyavsaa) (@jennyavsaa)
-- [Juan Antonio Mancera Velasco.](https://github.com/Juan-117) (@Juan-117)
+- [Juan Antonio Mancera Velasco](https://github.com/Juan-117) (@Juan-117)
 - [Juan Francisco García Rodríguez](https://github.com/JFranciscoGR03) (@JFranciscoGR03)
 - [Johan Donato Cabrera Martínez](https://github.com/JDonatoCM) (@JDonatoCM)
 
