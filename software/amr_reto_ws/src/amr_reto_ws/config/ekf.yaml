@@ -1,0 +1,37 @@
+ekf_filter_node:
+  ros__parameters:
+
+    frequency: 40.0
+    sensor_timeout: 0.1
+    two_d_mode: false
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
+
+    use_sim_time: false
+    publish_tf: true
+    publish_acceleration: false
+    use_control: false
+
+    enable_diagnostics: true
+
+    odom0: /odom
+    odom0_config: [true, true, false,       # x, y
+                   false, false, true,     # no orientación
+                   true, false, false,      # solo vx
+                   false, false, true,      # yaẇ
+                   false, false, false]     # sin aceleraciones
+    odom0_differential: false
+    odom0_relative: false
+
+    #imu0: /bno055/imu
+    #imu0_config: [false, false, false,
+    #              false, false, true,         # orientación
+    #              false, false, false,      # NO linear vel
+    #              false, false, false,      # NO angular vel
+    #              false, false, false]      # NO aceleración
+    #imu0_differential: false
+    #imu0_relative: false
+    #imu0_remove_gravitational_acceleration: false
