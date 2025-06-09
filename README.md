@@ -20,3 +20,8 @@ Para cumplir con los requerimientos del caso de uso, se incorporó una caja supe
 
 A nivel superficial, se integró una caja de control que aloja la **ESP32**, circuitos auxiliares y una pantalla digital que permite visualizar el voltaje en tiempo real. Esta funcionalidad resultó útil para monitorear el nivel de carga de la batería de 48V y verificar la correcta entrega de energía al controlador **VESC**. Además, el sistema incluye un botón físico de paro de emergencia montado en la parte posterior, el cual desconecta exclusivamente la alimentación de los motores, preservando el estado de la **Jetson** y los sensores.
 
+<p align="center">
+  <img src="/home/francisco/Downloads/modelo_isometrico_robocov.png" alt="RobocovModel" width="500"/>
+</p>
+
+
