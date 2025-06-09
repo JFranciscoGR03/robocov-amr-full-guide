@@ -1,6 +1,8 @@
 # Desarrollo de un Robot Móvil Autónomo para Entornos Logísticos en Interiores
 
-![LogoTec](https://javier.rodriguez.org.mx/itesm/2014/tecnologico-de-monterrey-blue.png)
+<p align="center">
+  <img src="https://javier.rodriguez.org.mx/itesm/2014/tecnologico-de-monterrey-blue.png" alt="LogoTec" width="200"/>
+</p>
 
 ## Colaboradores
 
