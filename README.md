@@ -13,21 +13,13 @@
 
 ## Descripción del sistema
 
-<p align="justify">
 El sistema fue desarrollado sobre la plataforma robótica **Robocov**, un robot móvil diferencial con estructura de aluminio tipo perfil Bosch. Su forma general corresponde a un prisma rectangular de aproximadamente $0.84\text{m} \times 0.61\text{m} \times 0.25\text{m}$, con caras de acrílico negro que protegen los módulos internos. El acceso a componentes se realiza retirando únicamente la cara superior, lo que facilita el mantenimiento.
-</p>
 
-<p align="justify">
 La locomoción se basa en dos motores *brushless* tipo hub montados directamente sobre ruedas traseras, mientras que el eje delantero está estabilizado con ruedas locas. Esta configuración diferencial resulta adecuada para entornos planos y estructurados, como pasillos logísticos. Sin embargo, la distribución de masa dominada por la batería de 48V ubicada al centro del chasis introdujo desafíos en frenado y estabilidad durante maniobras a alta velocidad.
-</p>
 
-<p align="justify">
 Para cumplir con los requerimientos del caso de uso, se incorporó una caja superior para transportar paquetes con masa variable. Esta estructura se fijó a la cara superior del robot, manteniendo la estabilidad del centro de gravedad. Adicionalmente, se diseñó e imprimió un soporte en 3D para montar de forma alineada el sensor LiDAR **RPLIDAR S3** y la cámara **Logitech Brio 100** sobre el eje longitudinal del robot, a una altura de $0.62\,\text{m}$ desde el suelo, evitando interferencias con la carga.
-</p>
 
-<p align="justify">
 A nivel superficial, se integró una caja de control que aloja la **ESP32**, circuitos auxiliares y una pantalla digital que permite visualizar el voltaje en tiempo real. Esta funcionalidad resultó útil para monitorear el nivel de carga de la batería de 48V y verificar la correcta entrega de energía al controlador **VESC**. Además, el sistema incluye un botón físico de paro de emergencia montado en la parte posterior, el cual desconecta exclusivamente la alimentación de los motores, preservando el estado de la **Jetson** y los sensores.
-</p>
 
 <p align="center">
   <img src="images/modelo_isometrico_robocov.png" alt="RobocovModel" width="300"/>
@@ -35,17 +27,11 @@ A nivel superficial, se integró una caja de control que aloja la **ESP32**, cir
 
 ## Consideraciones de dirección y control
 
-<p align="justify">
 Inicialmente, se consideró que la parte delantera de Robocov sería como en un robot diferencial convencional, es decir, con las ruedas motrices al frente y las ruedas locas atrás. Por esta razón, el controlador **Flipsky VESC** fue configurado bajo esa suposición.
-</p>
 
-<p align="justify">
 Sin embargo, durante el armado y pruebas del robot, se decidió invertir la orientación debido a la **distribución real del peso del chasis**, por lo que la parte delantera funcional de Robocov está compuesta por las ruedas locas, y el eje motriz quedó en la parte trasera.
-</p>
 
-<p align="justify">
 Como consecuencia de que el **Flipsky VESC** permaneció con la configuración inicial, fue necesario ajustar la lógica de control de movimiento de la siguiente manera:
-</p>
 
 - En el código de **Micro-ROS**, la **velocidad lineal enviada a los VESCs está multiplicada por `-1`**, para invertir el sentido del avance/retroceso.
 - Para invertir la **velocidad angular** correctamente, esta también está multiplicada por `-1`, pero directamente en los nodos de ROS 2 que publican en el tópico `/cmd_vel`.
@@ -57,9 +43,7 @@ Los nodos que aplican esta corrección son:
 - `hybrid_navigation_node`
 - `navigation_node`
 
-<p align="justify">
 Estos ajustes aseguran que el comportamiento del robot en navegación, seguimiento de carriles y control manual sea coherente con la dirección real del movimiento.
-</p>
 
 ## Estructura del proyecto (Carpeta `software/` y `extra/`)
 
@@ -67,9 +51,7 @@ El código fuente del sistema Robocov se encuentra en la carpeta `software/`, or
 
 ### 1. Micro-ROS
 
-<p align="justify">
 Contiene todo lo relacionado con el microcontrolador **ESP32**, encargado del control de los motores a través de **VESC** y la recepción de comandos de velocidad desde ROS 2.
-</p>
 
 - `software/Micro-ROS/ros2_utilities_ws/`: Workspace de ROS 2 diseñado para ejecutarse en la computadora o en la Jetson Orin Nano, utilizado para pruebas y depuración en paralelo con Micro-ROS.
   
@@ -79,9 +61,7 @@ Contiene todo lo relacionado con el microcontrolador **ESP32**, encargado del co
 
 ### 2. ROS 2
 
-<p align="justify">
 Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson Orin Nano o PC host). Está ubicado en `software/ROS2/` y sigue la estructura estándar de ROS 2 (`src/`, `build/`, `install/`, `log/`). Dentro de `src/` se encuentran los siguientes nodos:
-</p>
 
 #### Nodos activos principales:
 
@@ -117,18 +97,14 @@ Además, dentro de esta parte del proyecto se encuentra la carpeta:
 
 ### 3. Archivo de lanzamiento (`launch.py`)
 
-<p align="justify">
 El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar todos los nodos necesarios para la operación de Robocov. Actualmente, están **comentados** los siguientes nodos:
-</p>
 
 - `logic_node`
 - `hybrid_navigation_node`
 - `lane_follower_node`
 - `aruco_detection_node`
 
-<p align="justify">
 Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, utilizando únicamente los nodos esenciales.
-</p>
 
 > **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
 > Nota: Las carpetas `build/`, `install/` y `log/` son generadas automáticamente por ROS 2 (`colcon build`).
@@ -150,9 +126,7 @@ La carpeta `extra/` contiene archivos auxiliares necesarios para la operación c
 
 ## Consideraciones importantes
 
-<p align="justify">
 Antes de ejecutar el sistema Robocov, es importante considerar los siguientes aspectos para asegurar una experiencia fluida:
-</p>
 
 1. **IMU (BNO055) desactivada por defecto**  
    Al inicio del desarrollo se utilizaba un IMU BNO055 para mejorar la localización del robot. Por ello:
@@ -328,13 +302,9 @@ A continuación se listan algunas propuestas para futuras versiones de Robocov, 
 
 ## Notas finales
 
-<p align="justify">
 Esta guía proporciona una **visión general del funcionamiento de Robocov**, incluyendo su estructura, uso y consideraciones técnicas esenciales.
-</p>
 
-<p align="justify">
 Para una explicación más detallada del desarrollo, diseño de software y decisiones técnicas, se recomienda revisar los documentos disponibles en la carpeta `docs/`. Allí encontrarás una **presentación** y un **reporte técnico** que profundizan en la implementación del sistema.
-</p>
 
 ### Aplicabilidad a otros robots
 
@@ -345,8 +315,6 @@ Aunque esta guía está basada en el robot Robocov, **la mayoría del sistema es
 - Planeador A* y manejo de mapas
 - Micro-ROS y comunicación con motores mediante UART
 
-<p align="justify">
 Solo es necesario **modificar los parámetros específicos del robot**, como el URDF, configuración del EKF, dimensiones, y controladores físicos para adaptar esta implementación a otros modelos.
-</p>
 
 > Esta arquitectura modular permite escalar fácilmente a distintas plataformas móviles y entornos reales.
