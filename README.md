@@ -21,9 +21,13 @@ El sistema fue desarrollado sobre la plataforma robótica **Robocov**, un robot 
 La locomoción se basa en dos motores *brushless* tipo hub montados directamente sobre ruedas traseras, mientras que el eje delantero está estabilizado con ruedas locas. Esta configuración diferencial resulta adecuada para entornos planos y estructurados, como pasillos logísticos. Sin embargo, la distribución de masa dominada por la batería de 48V ubicada al centro del chasis introdujo desafíos en frenado y estabilidad durante maniobras a alta velocidad.
 </p>
 
+<p align="justify">
 Para cumplir con los requerimientos del caso de uso, se incorporó una caja superior para transportar paquetes con masa variable. Esta estructura se fijó a la cara superior del robot, manteniendo la estabilidad del centro de gravedad. Adicionalmente, se diseñó e imprimió un soporte en 3D para montar de forma alineada el sensor LiDAR **RPLIDAR S3** y la cámara **Logitech Brio 100** sobre el eje longitudinal del robot, a una altura de $0.62\,\text{m}$ desde el suelo, evitando interferencias con la carga.
+</p>
 
+<p align="justify">
 A nivel superficial, se integró una caja de control que aloja la **ESP32**, circuitos auxiliares y una pantalla digital que permite visualizar el voltaje en tiempo real. Esta funcionalidad resultó útil para monitorear el nivel de carga de la batería de 48V y verificar la correcta entrega de energía al controlador **VESC**. Además, el sistema incluye un botón físico de paro de emergencia montado en la parte posterior, el cual desconecta exclusivamente la alimentación de los motores, preservando el estado de la **Jetson** y los sensores.
+</p>
 
 <p align="center">
   <img src="images/modelo_isometrico_robocov.png" alt="RobocovModel" width="300"/>
@@ -31,11 +35,17 @@ A nivel superficial, se integró una caja de control que aloja la **ESP32**, cir
 
 ## Consideraciones de dirección y control
 
+<p align="justify">
 Inicialmente, se consideró que la parte delantera de Robocov sería como en un robot diferencial convencional, es decir, con las ruedas motrices al frente y las ruedas locas atrás. Por esta razón, el controlador **Flipsky VESC** fue configurado bajo esa suposición.
+</p>
 
+<p align="justify">
 Sin embargo, durante el armado y pruebas del robot, se decidió invertir la orientación debido a la **distribución real del peso del chasis**, por lo que la parte delantera funcional de Robocov está compuesta por las ruedas locas, y el eje motriz quedó en la parte trasera.
+</p>
 
+<p align="justify">
 Como consecuencia de que el **Flipsky VESC** permaneció con la configuración inicial, fue necesario ajustar la lógica de control de movimiento de la siguiente manera:
+</p>
 
 - En el código de **Micro-ROS**, la **velocidad lineal enviada a los VESCs está multiplicada por `-1`**, para invertir el sentido del avance/retroceso.
 - Para invertir la **velocidad angular** correctamente, esta también está multiplicada por `-1`, pero directamente en los nodos de ROS 2 que publican en el tópico `/cmd_vel`.
