@@ -185,13 +185,13 @@ Para operar correctamente a Robocov se recomienda utilizar **tres terminales**:
    ros2 launch amr_reto_ws robocov_bringup_launch.py
    ```
 
-2. **Terminal 2 (SSH a la Jetson)**
+2. **Terminal 2 (SSH a la Jetson)**  
    Lanza el agente de Micro-ROS que se comunica con la ESP32:
    ```bash
    ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyUSB0_custom
    ```
 
-3. **Terminal 3 (En la computadora personal)**
+3. **Terminal 3 (En la computadora personal)**  
    Ejecuta RViz para visualizar el estado del robot:
    Lanza el agente de Micro-ROS que se comunica con la ESP32:
    ```bash
