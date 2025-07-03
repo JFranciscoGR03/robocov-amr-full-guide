@@ -25,4 +25,83 @@ A nivel superficial, se integró una caja de control que aloja la **ESP32**, cir
   <img src="images/modelo_isometrico_robocov.png" alt="RobocovModel" width="300"/>
 </p>
 
+### Consideraciones de dirección y control
 
+Inicialmente, se consideró que la parte delantera de Robocov sería como en un robot diferencial convencional, es decir, con las ruedas motrices al frente y las ruedas locas atrás. Por esta razón, el controlador **Flipsky VESC** fue configurado bajo esa suposición.
+
+Sin embargo, durante el armado y pruebas del robot, se decidió invertir la orientación debido a la **distribución real del peso del chasis**, por lo que la parte delantera funcional de Robocov está compuesta por las ruedas locas, y el eje motriz quedó en la parte trasera.
+
+Como consecuencia de que el **Flipsky VESC** permaneció con la configuración inicial, fue necesario ajustar la lógica de control de movimiento de la siguiente manera:
+
+- En el código de **Micro-ROS**, la **velocidad lineal enviada a los VESCs está multiplicada por `-1`**, para invertir el sentido del avance/retroceso.
+- Para invertir la **velocidad angular** correctamente, esta también está multiplicada por `-1`, pero directamente en los nodos de ROS 2 que publican en el tópico `/cmd_vel`.
+
+Los nodos que aplican esta corrección son:
+
+- `joystick_node`
+- `lane_follower_node`
+- `hybrid_navigation_node`
+- `navigation_node`
+
+Estos ajustes aseguran que el comportamiento del robot en navegación, seguimiento de carriles y control manual sea coherente con la dirección real del movimiento.
+
+### Estructura del proyecto (Carpeta `software/` y `extra/`)
+
+El código fuente del sistema Robocov se encuentra en la carpeta `software/`, organizado en dos partes principales:
+
+#### 1. Micro-ROS
+
+Contiene todo lo relacionado con el microcontrolador **ESP32**, encargado del control de los motores a través de **VESC** y la recepción de comandos de velocidad desde ROS 2.
+
+- `software/Micro-ROS/ros2_utilities_ws/`: Workspace de ROS 2 diseñado para ejecutarse en la computadora o en la Jetson Orin Nano, utilizado para pruebas y depuración en paralelo con Micro-ROS.
+  
+- `software/Micro-ROS/libraries/`: Librerías de **Arduino** necesarias para el uso de **Micro-ROS** y para la comunicación con los **VESC** vía **UART**.
+
+- `software/Micro-ROS/VESC_controller/`: Código principal que se carga en la ESP32. Se encarga de recibir comandos de velocidad (`cmd_vel`), calcular velocidades individuales para cada rueda, controlar los motores mediante VESC, y publicar la odometría hacia ROS 2.
+
+#### 2. ROS 2
+
+Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson Orin Nano o PC host). Está ubicado en `software/ROS2/` y sigue la estructura estándar de ROS 2 (`src/`, `build/`, `install/`, `log/`). Dentro de `src/` se encuentran los siguientes nodos:
+
+##### Nodos activos principales:
+
+- `navigation_node`: Nodo de navegación autónoma clásica basado en mapas, localización con AMCL y planeación de rutas. **Este nodo es suficiente para operar Robocov en la mayoría de entornos.**
+
+- `odometry_node`: Calcula y publica la odometría del robot a partir de las velocidades de las ruedas.
+
+- `pause_node`: Nodo de seguridad que integra información del LiDAR y detección de personas mediante YOLO para detener al robot si hay personas en su trayectoria.
+
+- `YOLO`: Nodo de detección de personas basado en visión. Utiliza el modelo **YOLOv8 nano**, optimizado para Jetson Orin Nano.
+
+- `rplidar_ros`: Driver del sensor **RPLIDAR S3**, utilizado para escaneo láser en 2D, mapeo y localización.  
+  > Este paquete fue **clonado directamente desde el repositorio oficial de GitHub** del fabricante.  
+  > La única modificación realizada fue la **configuración del puerto serial** (`/dev/ttyUSBx`) para que coincidiera con el puerto asignado por el sistema al LiDAR.
+
+##### Nodos experimentales o específicos:
+
+- `lane_follower_node`: Nodo para seguimiento visual de líneas. **Solo fue utilizado durante pruebas**, ya que su funcionalidad está integrada dentro de `hybrid_navigation_node`.
+
+- `hybrid_navigation_node`: Nodo que combina navegación tradicional con seguimiento visual de líneas. **Se utilizó exclusivamente en el almacén de Glaxo**, donde los pasillos marcados con líneas permitían a Robocov seguir trayectorias con alta precisión.
+
+- `logic_node`: Nodo que alterna dinámicamente entre controladores (por ejemplo, entre navegación clásica y seguimiento de líneas). **Usado únicamente en Glaxo junto con `hybrid_navigation_node`.**
+
+- `aruco_detection_node`: Nodo de detección de marcadores **Aruco**. Nunca se utilizó en producción, pero se desarrolló como opción futura para posicionamiento por visión.
+
+- `joystick_node`: Nodo para control manual con un joystick físico (PS4/PS5 u otro compatible).
+
+- `astar_planner`: Nodo que implementa planeación de rutas mediante el algoritmo A*. Puede ser usado como alternativa al planner de `nav2`.
+
+---
+
+#### Sobre el archivo de lanzamiento (`launch.py`)
+
+El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar todos los nodos necesarios para la operación de Robocov. Actualmente, están **comentados** los siguientes nodos:
+
+- `logic_node`
+- `hybrid_navigation_node`
+- `lane_follower_node`
+- `aruco_detection_node`
+
+Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, usando únicamente `navigation_node`, `pause_node`, `odometry_node`, `YOLO`, y el driver del LiDAR.
+
+> **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
