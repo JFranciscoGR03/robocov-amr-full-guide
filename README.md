@@ -294,3 +294,8 @@ A continuación se listan algunas propuestas para futuras versiones de Robocov, 
 - **Mejoras en el manejo de fallas en Micro-ROS**, con reconexión automática al agente sin necesidad de reinicio físico.
 
 - **Cambio del control inalámbrico** por uno de mayor calidad y estabilidad, con mejor conexión Bluetooth o 2.4 GHz.
+
+## Funcionamiento del robot
+
+[Video de demostración de Robocov en Glaxo (prueba previa)](https://youtu.be/yPrvOlhJz0o)
+[Video de demostración de Robocov en Aulas I (prueba final)](https://youtu.be/GQvPp4Hcdwo)
