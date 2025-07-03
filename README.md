@@ -100,6 +100,6 @@ El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar t
 - `lane_follower_node`
 - `aruco_detection_node`
 
-Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, usando únicamente `navigation_node`, `pause_node`, `odometry_node`, `YOLO`, y el driver del LiDAR.
+Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo o solo sirvieron para la realización de pruebas. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, usando únicamente `navigation_node`, `pause_node`, `odometry_node`, `YOLO`, y el driver del LiDAR.
 
 > **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
