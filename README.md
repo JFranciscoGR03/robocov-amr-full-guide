@@ -117,14 +117,18 @@ Además, dentro de esta parte del proyecto se encuentra la carpeta:
 
 ### 3. Archivo de lanzamiento (`launch.py`)
 
+<p align="justify">
 El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar todos los nodos necesarios para la operación de Robocov. Actualmente, están **comentados** los siguientes nodos:
+</p>
 
 - `logic_node`
 - `hybrid_navigation_node`
 - `lane_follower_node`
 - `aruco_detection_node`
 
+<p align="justify">
 Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, utilizando únicamente los nodos esenciales.
+</p>
 
 > **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
 > Nota: Las carpetas `build/`, `install/` y `log/` son generadas automáticamente por ROS 2 (`colcon build`).
@@ -146,7 +150,9 @@ La carpeta `extra/` contiene archivos auxiliares necesarios para la operación c
 
 ## Consideraciones importantes
 
+<p align="justify">
 Antes de ejecutar el sistema Robocov, es importante considerar los siguientes aspectos para asegurar una experiencia fluida:
+</p>
 
 1. **IMU (BNO055) desactivada por defecto**  
    Al inicio del desarrollo se utilizaba un IMU BNO055 para mejorar la localización del robot. Por ello:
@@ -322,9 +328,13 @@ A continuación se listan algunas propuestas para futuras versiones de Robocov, 
 
 ## Notas finales
 
+<p align="justify">
 Esta guía proporciona una **visión general del funcionamiento de Robocov**, incluyendo su estructura, uso y consideraciones técnicas esenciales.
+</p>
 
+<p align="justify">
 Para una explicación más detallada del desarrollo, diseño de software y decisiones técnicas, se recomienda revisar los documentos disponibles en la carpeta `docs/`. Allí encontrarás una **presentación** y un **reporte técnico** que profundizan en la implementación del sistema.
+</p>
 
 ### Aplicabilidad a otros robots
 
@@ -335,6 +345,8 @@ Aunque esta guía está basada en el robot Robocov, **la mayoría del sistema es
 - Planeador A* y manejo de mapas
 - Micro-ROS y comunicación con motores mediante UART
 
+<p align="justify">
 Solo es necesario **modificar los parámetros específicos del robot**, como el URDF, configuración del EKF, dimensiones, y controladores físicos para adaptar esta implementación a otros modelos.
+</p>
 
 > Esta arquitectura modular permite escalar fácilmente a distintas plataformas móviles y entornos reales.
