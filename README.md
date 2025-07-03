@@ -279,3 +279,18 @@ A continuación se listan algunos problemas que pueden presentarse durante la op
 - Si el robot se encuentra **muy alejado de su posición real en el mapa** y se le asigna una `initial_pose` incorrecta mediante la herramienta **"2D Pose Estimate"** en RViz, el **robot puede perder la referencia**, moverse de forma errática o tardar mucho en localizarse.
 - En estos casos, se recomienda repetir el proceso de estimación de pose **2 o 3 veces**, ajustando tanto la **posición** como la **orientación** hasta que el nodo **AMCL** logre una localización confiable y estable.
 
+## Posibles mejoras al sistema
+
+A continuación se listan algunas propuestas para futuras versiones de Robocov, con el objetivo de mejorar su rendimiento, integración y maniobrabilidad en entornos logísticos reales:
+
+- **Integrar métricas dinámicas en el planeador A\*** o utilizar A\* híbrido para una navegación más inteligente y orientada a tareas reales.
+
+- **Conectar con el sistema de administración del almacén** y bases de datos en tiempo real, permitiendo que el robot reciba órdenes logísticas dinámicas y reporte su estado automáticamente.
+
+- **Implementar una red local independiente y robusta** para eliminar la dependencia del celular y mejorar la estabilidad en campo.
+
+- **Optimización del nodo `pause_node`** para tomar decisiones más inteligentes en la detección de personas o obstáculos mediante fusión de visión y LiDAR.
+
+- **Mejoras en el manejo de fallas en Micro-ROS**, con reconexión automática al agente sin necesidad de reinicio físico.
+
+- **Cambio del control inalámbrico** por uno de mayor calidad y estabilidad, con mejor conexión Bluetooth o 2.4 GHz.
