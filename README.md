@@ -298,4 +298,4 @@ A continuación se listan algunas propuestas para futuras versiones de Robocov, 
 ## Funcionamiento del robot
 
 [Video de demostración de Robocov en Glaxo (prueba previa).](https://youtu.be/yPrvOlhJz0o)  
-[Video de demostración de Robocov en Aulas I (prueba final.)](https://youtu.be/GQvPp4Hcdwo)
+[Video de demostración de Robocov en Aulas I (prueba final).](https://youtu.be/GQvPp4Hcdwo)
