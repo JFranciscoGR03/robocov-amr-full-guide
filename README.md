@@ -74,7 +74,7 @@ Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson O
 - `YOLO`: Nodo de detección de personas basado en visión. Utiliza el modelo **YOLOv8 nano**, optimizado para Jetson Orin Nano.
 
 - `rplidar_ros`: Driver del sensor **RPLIDAR S3**, utilizado para escaneo láser en 2D, mapeo y localización.  
-  > Este paquete fue **clonado directamente desde el repositorio oficial de GitHub** del fabricante.  
+  > Este paquete fue **clonado directamente desde un repositorio de GitHub** previamente publicado.  
   > La única modificación realizada fue la **configuración del puerto serial** (`/dev/ttyUSBx`) para que coincidiera con el puerto asignado por el sistema al LiDAR.
 
 ##### Nodos experimentales o específicos:
@@ -90,8 +90,6 @@ Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson O
 - `joystick_node`: Nodo para control manual con un joystick físico (PS4/PS5 u otro compatible).
 
 - `astar_planner`: Nodo que implementa planeación de rutas mediante el algoritmo A*. Puede ser usado como alternativa al planner de `nav2`.
-
----
 
 #### Sobre el archivo de lanzamiento (`launch.py`)
 
