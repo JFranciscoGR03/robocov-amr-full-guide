@@ -246,3 +246,36 @@ Robocov incluye varias formas de detenerse de inmediato ante cualquier situació
 - Presionando el **botón derecho del control**, se corta el suministro eléctrico desde la batería principal.
 
 Estas tres opciones garantizan redundancia y seguridad operativa, tanto en entornos de prueba como de implementación real.
+
+## Posibles fallas y soluciones
+
+A continuación se listan algunos problemas que pueden presentarse durante la operación del sistema, junto con sus causas y soluciones recomendadas:
+
+### Conectividad e Internet móvil
+
+- Si el **internet del celular** que provee la red es lento o inestable, puede afectar el comportamiento general del robot (por ejemplo, retrasos en comandos o desconexiones).
+- El **celular debe estar siempre cerca del módem** para asegurar buena señal.
+- El **módem está instalado directamente en el robot** para que siempre esté cerca de la Jetson.
+- La **computadora que se conecta por SSH** también debe estar relativamente cerca del módem para evitar interferencias o pérdida de conexión.
+
+### Fallos en Micro-ROS
+
+- En raras ocasiones, **Micro-ROS puede dejar de responder** o no establecer conexión después de un reinicio del sistema. En estos casos es recomendable hacer un **paro de emergencia** (físico o por radiofrecuencia), y reiniciar Micro-ROS.
+- También puede suceder que al ejecutar el comando:
+  ```bash
+  ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyUSB0_custom
+  ```
+  aparezca un error de conexión serial en letras rojas. Esto se soluciona fácilmente desconectando y reconectando el cable micro-USB de la ESP32.
+
+### Desconexión del gamepad
+
+- Debido a la **baja calidad del control inalámbrico** o a un **nivel bajo de batería**, el **gamepad puede desconectarse de forma intermitente**.
+- Cuando esto sucede, los **LEDs del control comienzan a parpadear rápidamente**.
+- En condiciones normales, cuando el gamepad está **conectado correctamente a la Jetson**, **solo un LED permanece encendido** de forma constante.
+- Se recomienda verificar el estado del control al iniciar el sistema y tener **baterías de repuesto** disponibles.
+
+### Estimación incorrecta de la posición inicial
+
+- Si el robot se encuentra **muy alejado de su posición real en el mapa** y se le asigna una `initial_pose` incorrecta mediante la herramienta **"2D Pose Estimate"** en RViz, el **robot puede perder la referencia**, moverse de forma errática o tardar mucho en localizarse.
+- En estos casos, se recomienda repetir el proceso de estimación de pose **2 o 3 veces**, ajustando tanto la **posición** como la **orientación** hasta que el nodo **AMCL** logre una localización confiable y estable.
+
