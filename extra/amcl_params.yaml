@@ -1,0 +1,29 @@
+amcl:
+  ros__parameters:
+    use_sim_time: false
+
+    base_frame_id: "base_link"
+    odom_frame_id: "odom"
+    scan_topic: "/scan"
+
+    laser_min_range: 0.2
+    laser_max_range: 30.0
+
+    min_particles: 2000
+    max_particles: 4000  # más partículas para mayor precisión
+
+    update_min_d: 0.05   # se actualiza con menos movimiento
+    update_min_a: 0.05   # se actualiza con menos rotación
+
+    odom_model_type: "diff"
+    alpha1: 0.2  # rot->rot
+    alpha2: 0.2  # trans->rot
+    alpha3: 0.8  # trans->trans (menos ruido, aún robusto)
+    alpha4: 0.8  # rot->trans
+    alpha5: 0.05
+
+    resample_interval: 1
+    transform_tolerance: 0.5  # menos tolerancia, más preciso
+    recovery_alpha_slow: 0.0
+    recovery_alpha_fast: 0.0
+

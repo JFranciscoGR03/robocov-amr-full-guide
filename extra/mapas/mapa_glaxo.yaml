@@ -1,0 +1,7 @@
+image: /home/jumpers/maps/mapa_glaxo.pgm
+resolution: 0.05
+origin: [0.0, 0.0, 0.0]  # Ajusta si lo cambiaste
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.2
+mode: trinary
