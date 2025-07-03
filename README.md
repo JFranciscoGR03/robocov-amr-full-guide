@@ -299,3 +299,22 @@ A continuación se listan algunas propuestas para futuras versiones de Robocov, 
 
 [Video de demostración de Robocov en Glaxo (prueba previa).](https://youtu.be/yPrvOlhJz0o)  
 [Video de demostración de Robocov en Aulas I (prueba final).](https://youtu.be/GQvPp4Hcdwo)
+
+## Notas finales
+
+Esta guía proporciona una **visión general del funcionamiento de Robocov**, incluyendo su estructura, uso y consideraciones técnicas esenciales.
+
+Para una explicación más detallada del desarrollo, diseño de software y decisiones técnicas, se recomienda revisar los documentos disponibles en la carpeta `docs/`. Allí encontrarás una **presentación** y un **reporte técnico** que profundizan en la implementación del sistema.
+
+### Aplicabilidad a otros robots
+
+Aunque esta guía está basada en el robot Robocov, **la mayoría del sistema es aplicable a cualquier robot diferencial**, incluyendo:
+
+- Nodo de navegación (`navigation_node`)
+- Control mediante joystick
+- Planeador A* y manejo de mapas
+- Micro-ROS y comunicación con motores mediante UART
+
+Solo es necesario **modificar los parámetros específicos del robot**, como el URDF, configuración del EKF, dimensiones, y controladores físicos para adaptar esta implementación a otros modelos.
+
+> Esta arquitectura modular permite escalar fácilmente a distintas plataformas móviles y entornos reales.
