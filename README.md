@@ -49,7 +49,7 @@ Estos ajustes aseguran que el comportamiento del robot en navegación, seguimien
 
 El código fuente del sistema Robocov se encuentra en la carpeta `software/`, organizado en dos partes principales:
 
-#### 1. Micro-ROS
+### 1. Micro-ROS
 
 Contiene todo lo relacionado con el microcontrolador **ESP32**, encargado del control de los motores a través de **VESC** y la recepción de comandos de velocidad desde ROS 2.
 
@@ -59,11 +59,11 @@ Contiene todo lo relacionado con el microcontrolador **ESP32**, encargado del co
 
 - `software/Micro-ROS/VESC_controller/`: Código principal que se carga en la ESP32. Se encarga de recibir comandos de velocidad (`cmd_vel`), calcular velocidades individuales para cada rueda, controlar los motores mediante VESC, y publicar la odometría hacia ROS 2.
 
-#### 2. ROS 2
+### 2. ROS 2
 
 Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson Orin Nano o PC host). Está ubicado en `software/ROS2/` y sigue la estructura estándar de ROS 2 (`src/`, `build/`, `install/`, `log/`). Dentro de `src/` se encuentran los siguientes nodos:
 
-##### Nodos activos principales:
+#### Nodos activos principales:
 
 - `navigation_node`: Nodo de navegación autónoma clásica basado en mapas, localización con AMCL y planeación de rutas. **Este nodo es suficiente para operar Robocov en todos los entornos.**
 
@@ -77,7 +77,7 @@ Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson O
   > Este paquete fue **clonado directamente desde un repositorio de GitHub** previamente publicado.  
   > La única modificación realizada fue la **configuración del puerto serial** (`/dev/ttyUSBx`) para que coincidiera con el puerto asignado por el sistema al LiDAR.
 
-##### Nodos experimentales o específicos:
+#### Nodos experimentales o específicos:
 
 - `lane_follower_node`: Nodo para seguimiento visual de líneas. **Solo fue utilizado durante pruebas**, ya que su funcionalidad está integrada dentro de `hybrid_navigation_node`.
 
@@ -91,25 +91,11 @@ Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson O
 
 - `astar_planner`: Nodo que implementa planeación de rutas mediante el algoritmo A*.
 
-#### Sobre el archivo de lanzamiento (`launch.py`)
-
-El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar todos los nodos necesarios para la operación de Robocov. Actualmente, están **comentados** los siguientes nodos:
-
-- `logic_node`
-- `hybrid_navigation_node`
-- `lane_follower_node`
-- `aruco_detection_node`
-
-Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo o solo sirvieron para la realización de pruebas. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**.
-
-> **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
-> Nota: Las carpetas `build/`, `install/` y `log/` son generadas automáticamente por ROS 2 (`colcon build`).
-
 Además, dentro de esta parte del proyecto se encuentra la carpeta:
 
 - `urdf/`: Contiene el modelo del robot Robocov en formato URDF, utilizado para la visualización en RViz y para propósitos de simulación y transformaciones.
 
-#### 3. Archivo de lanzamiento (`launch.py`)
+### 3. Archivo de lanzamiento (`launch.py`)
 
 El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar todos los nodos necesarios para la operación de Robocov. Actualmente, están **comentados** los siguientes nodos:
 
@@ -121,9 +107,10 @@ El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar t
 Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, utilizando únicamente los nodos esenciales.
 
 > **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
+> Nota: Las carpetas `build/`, `install/` y `log/` son generadas automáticamente por ROS 2 (`colcon build`).
 
 
-#### 4. Archivos adicionales (`extra/`)
+### 4. Archivos adicionales (`extra/`)
 
 La carpeta `extra/` contiene archivos auxiliares necesarios para la operación completa del sistema:
 
@@ -200,7 +187,7 @@ Para operar correctamente a Robocov se recomienda utilizar **tres terminales**:
 
 > Se pueden abrir más terminales para propósitos de depuración o monitoreo adicional (por ejemplo, ros2 topic echo, rqt, etc.).
 
-#### Inicialización del sistema
+### Inicialización del sistema
 
 Una vez ejecutados los tres procesos anteriores, es necesario inicializar los tópicos de Micro-ROS. Para ello:
 
@@ -210,13 +197,13 @@ Una vez ejecutados los tres procesos anteriores, es necesario inicializar los t�
 
 Esto permitirá que la ESP32 establezca conexión y comience a publicar/escuchar en los tópicos esperados.
 
-#### Estimación inicial de posición
+### Estimación inicial de posición
 
 Una vez que la ESP32 esté conectada, en **RViz** se debe asignar una posición inicial usando la herramienta **"2D Pose Estimate"** o publicando una `initial_pose`. Esto es esencial para que el nodo **AMCL** tenga una idea inicial de la ubicación del robot en el mapa.
 
 > Este paso es obligatorio **cada vez que se lanza el sistema completo**, de lo contrario el robot no podrá localizarse correctamente y la navegación autónoma no funcionará.
 
-#### Modos de operación
+### Modos de operación
 
 Al arrancar, Robocov inicia en **modo de control manual**, es decir, el control por **gamepad** está activo por defecto.
 
@@ -229,7 +216,7 @@ Al arrancar, Robocov inicia en **modo de control manual**, es decir, el control 
 
 En este modo, los nodos `navigation_node` y `astar_planner` están **inactivos**. El robot no planeará ni seguirá rutas automáticamente.
 
-#### Activar navegación autónoma
+### Activar navegación autónoma
 
 <p align="center">
   <img src="images/cambio_modo.png" alt="Cambio" width="300"/>
