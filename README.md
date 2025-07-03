@@ -65,7 +65,7 @@ Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson O
 
 ##### Nodos activos principales:
 
-- `navigation_node`: Nodo de navegación autónoma clásica basado en mapas, localización con AMCL y planeación de rutas. **Este nodo es suficiente para operar Robocov en la mayoría de entornos.**
+- `navigation_node`: Nodo de navegación autónoma clásica basado en mapas, localización con AMCL y planeación de rutas. **Este nodo es suficiente para operar Robocov en todos los entornos.**
 
 - `odometry_node`: Calcula y publica la odometría del robot a partir de las velocidades de las ruedas.
 
@@ -85,11 +85,11 @@ Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson O
 
 - `logic_node`: Nodo que alterna dinámicamente entre controladores (por ejemplo, entre navegación clásica y seguimiento de líneas). **Usado únicamente en Glaxo junto con `hybrid_navigation_node`.**
 
-- `aruco_detection_node`: Nodo de detección de marcadores **Aruco**. Nunca se utilizó en producción, pero se desarrolló como opción futura para posicionamiento por visión.
+- `aruco_detection_node`: Nodo de detección de marcadores **Aruco**. Nunca se utilizó en la implementación final, pero se desarrolló como opción futura para posicionamiento por visión.
 
-- `joystick_node`: Nodo para control manual con un joystick físico (PS4/PS5 u otro compatible).
+- `joystick_node`: Nodo para control manual con un joystick físico.
 
-- `astar_planner`: Nodo que implementa planeación de rutas mediante el algoritmo A*. Puede ser usado como alternativa al planner de `nav2`.
+- `astar_planner`: Nodo que implementa planeación de rutas mediante el algoritmo A*.
 
 #### Sobre el archivo de lanzamiento (`launch.py`)
 
@@ -100,6 +100,39 @@ El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar t
 - `lane_follower_node`
 - `aruco_detection_node`
 
-Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo o solo sirvieron para la realización de pruebas. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, usando únicamente `navigation_node`, `pause_node`, `odometry_node`, `YOLO`, y el driver del LiDAR.
+Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo o solo sirvieron para la realización de pruebas. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**.
 
 > **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
+> Nota: Las carpetas `build/`, `install/` y `log/` son generadas automáticamente por ROS 2 (`colcon build`).
+
+Además, dentro de esta parte del proyecto se encuentra la carpeta:
+
+- `urdf/`: Contiene el modelo del robot Robocov en formato URDF, utilizado para la visualización en RViz y para propósitos de simulación y transformaciones.
+
+#### 3. Archivo de lanzamiento (`launch.py`)
+
+El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar todos los nodos necesarios para la operación de Robocov. Actualmente, están **comentados** los siguientes nodos:
+
+- `logic_node`
+- `hybrid_navigation_node`
+- `lane_follower_node`
+- `aruco_detection_node`
+
+Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, utilizando únicamente los nodos esenciales.
+
+> ✅ **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
+
+
+#### 4. Archivos adicionales (`extra/`)
+
+La carpeta `extra/` contiene archivos auxiliares necesarios para la operación completa del sistema:
+
+- `mapas/`: Carpeta que incluye los mapas utilizados por el robot, tanto para localización como para planeación de rutas:
+  - Archivos `.pgm` y `.yaml` correspondientes a **Glaxo** y **Aulas I**.
+  - Los archivos de mapa **crudos** son utilizados por el sistema de localización (`AMCL`).
+  - Los mapas con sufijo **`_edited`** han sido modificados para mejorar la planificación de rutas y son compatibles con el nodo `astar_planner`.
+
+- Archivos `.yaml` principales:
+  - `mapa.yaml`: Archivo para inicializar el mapa al lanzar el sistema.
+  - `amcl_params.yaml`: Parámetros personalizados para el nodo de localización `AMCL`.
+  - `camera_calibration.yaml`: Archivo con la calibración intrínseca de la cámara, útil si se requiere detección basada en visión (por ejemplo, YOLO o ArUco). Dentro de la Jetson, este archivo se encuentra en la ruta `.ros/camera_info`.
