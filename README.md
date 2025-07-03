@@ -152,9 +152,18 @@ Antes de ejecutar el sistema Robocov, es importante considerar los siguientes as
    - `/dev/ttyUSB0_custom`: corresponde a la **ESP32**.
    - `/dev/ttyUSB1_custom`: corresponde al **LiDAR**.
    - `/dev/ttyUSB2_custom`: correspondía al **IMU**. Actualmente no se utiliza.
+
    Esto garantiza que, sin importar el orden de conexión o reinicios, los dispositivos mantendrán sus rutas consistentes.
 
-3. **Inicio automatizado con Telegram y acceso SSH**  
+3. **Red local con módem en modo puente**  
+   Robocov utiliza una red local generada por un **módem configurado en modo puente**, el cual recibe Internet a través de un **teléfono celular en modo hotspot**.  
+   A esta red se conectan tanto:
+   - La **Jetson Orin Nano**, instalada en el robot.
+   - La **computadora remota**, que se conectará por **SSH** para control, monitoreo o desarrollo.
+
+   Esta configuración permite operar en entornos sin infraestructura de red disponible, como almacenes o aulas.
+
+4. **Inicio automatizado con Telegram y acceso SSH**  
    El sistema Jetson está configurado con **`systemd`** para ejecutar un script al arrancar que envía un mensaje por **Telegram** con la dirección IP local del dispositivo. Esto permite saber la IP sin necesidad de conectar una pantalla o teclado.
 
    Con esa IP, se puede acceder remotamente mediante SSH:
@@ -165,3 +174,88 @@ Antes de ejecutar el sistema Robocov, es importante considerar los siguientes as
    Esto permite tanto modificar código como ejecutar el sistema remotamente. La edición de código puede realizarse de dos formas:
    - Con el editor de texto nano directamente en terminal.
    - Usando Visual Studio Code con la extensión Remote - SSH, lo que permite trabajar con la Jetson desde tu computadora como si fuera local.
+
+## Uso del sistema
+
+Para operar correctamente a Robocov se recomienda utilizar **tres terminales**:
+
+1. **Terminal 1 (SSH a la Jetson)**  
+   Ejecuta el sistema principal de ROS 2:
+   ```bash
+   ros2 launch amr_reto_ws robocov_bringup_launch.py
+   ```
+
+2. **Terminal 2 (SSH a la Jetson)**
+   Lanza el agente de Micro-ROS que se comunica con la ESP32:
+   ```bash
+   ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyUSB0_custom
+   ```
+
+3. **Terminal 3 (En la computadora personal)**
+   Ejecuta RViz para visualizar el estado del robot:
+   Lanza el agente de Micro-ROS que se comunica con la ESP32:
+   ```bash
+   rviz2
+   ```
+
+> Se pueden abrir más terminales para propósitos de depuración o monitoreo adicional (por ejemplo, ros2 topic echo, rqt, etc.).
+
+#### Inicialización del sistema
+
+Una vez ejecutados los tres procesos anteriores, es necesario inicializar los tópicos de Micro-ROS. Para ello:
+
+- Se debe **resetear la ESP32**, lo cual puede hacerse de dos formas:
+  - Presionando el **botón rojo físico** ubicado en la caja de control del robot.
+  - Presionando el **botón izquierdo del control por radiofrecuencia**.
+
+Esto permitirá que la ESP32 establezca conexión y comience a publicar/escuchar en los tópicos esperados.
+
+#### Estimación inicial de posición
+
+Una vez que la ESP32 esté conectada, en **RViz** se debe asignar una posición inicial usando la herramienta **"2D Pose Estimate"** o publicando una `initial_pose`. Esto es esencial para que el nodo **AMCL** tenga una idea inicial de la ubicación del robot en el mapa.
+
+> Este paso es obligatorio **cada vez que se lanza el sistema completo**, de lo contrario el robot no podrá localizarse correctamente y la navegación autónoma no funcionará.
+
+#### Modos de operación
+
+Al arrancar, Robocov inicia en **modo de control manual**, es decir, el control por **gamepad** está activo por defecto.
+
+- **Joystick izquierdo**: controla la **velocidad lineal** (adelante / atrás).
+- **Joystick derecho**: controla la **velocidad angular** (izquierda / derecha).
+
+<p align="center">
+  <img src="images/control_manual.png" alt="Manual" width="300"/>
+</p>
+
+En este modo, los nodos `navigation_node` y `astar_planner` están **inactivos**. El robot no planeará ni seguirá rutas automáticamente.
+
+#### Activar navegación autónoma
+
+<p align="center">
+  <img src="images/cambio_modo.png" alt="Cambio" width="300"/>
+</p>
+
+Para cambiar al modo autónomo:
+
+- Deben presionarse **cuatro botones específicos del control** (combinación definida en el código).
+- Una vez activado el modo autónomo:
+  - En **RViz**, utiliza la herramienta **"Publish Point"** para hacer clic en el mapa e indicar el punto objetivo.
+  - El sistema generará un **path** y el robot comenzará a navegar hacia esa ubicación de forma autónoma.
+
+### Paros de emergencia
+
+Robocov incluye varias formas de detenerse de inmediato ante cualquier situación peligrosa o comportamiento inesperado:
+
+#### Paro por software
+- Si el robot presenta movimientos no deseados durante la navegación autónoma, se puede presionar nuevamente la combinación de **4 botones del gamepad**.
+- Esto **regresa el control al modo manual**, que siempre tiene prioridad sobre el sistema autónomo.
+
+#### Paro físico por botón
+- El robot tiene un **botón físico de paro de emergencia**.
+- Al presionarlo, se **corta el voltaje de las llantas**, deteniendo el movimiento del robot de forma inmediata.
+
+#### Paro por radiofrecuencia
+- En caso de estar lejos del robot, se puede usar el **control por radiofrecuencia**.
+- Presionando el **botón derecho del control**, se corta el suministro eléctrico desde la batería principal.
+
+Estas tres opciones garantizan redundancia y seguridad operativa, tanto en entornos de prueba como de implementación real.
