@@ -25,7 +25,7 @@ A nivel superficial, se integró una caja de control que aloja la **ESP32**, cir
   <img src="images/modelo_isometrico_robocov.png" alt="RobocovModel" width="300"/>
 </p>
 
-### Consideraciones de dirección y control
+## Consideraciones de dirección y control
 
 Inicialmente, se consideró que la parte delantera de Robocov sería como en un robot diferencial convencional, es decir, con las ruedas motrices al frente y las ruedas locas atrás. Por esta razón, el controlador **Flipsky VESC** fue configurado bajo esa suposición.
 
@@ -45,7 +45,7 @@ Los nodos que aplican esta corrección son:
 
 Estos ajustes aseguran que el comportamiento del robot en navegación, seguimiento de carriles y control manual sea coherente con la dirección real del movimiento.
 
-### Estructura del proyecto (Carpeta `software/` y `extra/`)
+## Estructura del proyecto (Carpeta `software/` y `extra/`)
 
 El código fuente del sistema Robocov se encuentra en la carpeta `software/`, organizado en dos partes principales:
 
@@ -120,7 +120,7 @@ El sistema cuenta con un archivo de lanzamiento principal que permite ejecutar t
 
 Esto se debe a que esos nodos solo eran relevantes en contextos específicos como el almacén de Glaxo. En su estado actual, el archivo de lanzamiento está optimizado para funcionar **en cualquier entorno**, utilizando únicamente los nodos esenciales.
 
-> ✅ **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
+> **Así como está el `launch.py` actualmente, Robocov funciona perfectamente en cualquier ambiente, sin necesidad de seguimiento visual de líneas.**
 
 
 #### 4. Archivos adicionales (`extra/`)
@@ -136,3 +136,32 @@ La carpeta `extra/` contiene archivos auxiliares necesarios para la operación c
   - `mapa.yaml`: Archivo para inicializar el mapa al lanzar el sistema.
   - `amcl_params.yaml`: Parámetros personalizados para el nodo de localización `AMCL`.
   - `camera_calibration.yaml`: Archivo con la calibración intrínseca de la cámara, útil si se requiere detección basada en visión (por ejemplo, YOLO o ArUco). Dentro de la Jetson, este archivo se encuentra en la ruta `.ros/camera_info`.
+
+## Consideraciones importantes
+
+Antes de ejecutar el sistema Robocov, es importante considerar los siguientes aspectos para asegurar una experiencia fluida:
+
+1. **IMU (BNO055) desactivada por defecto**  
+   Al inicio del desarrollo se utilizaba un IMU BNO055 para mejorar la localización del robot. Por ello:
+   - El archivo `ekf.yaml`, ubicado en la carpeta `config/` del workspace de ROS 2, contiene la configuración del filtro EKF con soporte para IMU, actualmente comentado.
+   - El sensor IMU también aparece definido en el modelo URDF y en las transformaciones estáticas.
+   Actualmente, el robot se localiza perfectamente usando únicamente AMCL con el LiDAR, por lo que el uso de la IMU es **opcional y no requerido** para el funcionamiento base.
+
+2. **Puertos seriales personalizados**  
+   Para evitar cambios aleatorios en los puertos USB al conectar dispositivos, se crearon **aliases persistentes** para los dispositivos seriales:
+   - `/dev/ttyUSB0_custom`: corresponde a la **ESP32**.
+   - `/dev/ttyUSB1_custom`: corresponde al **LiDAR**.
+   - `/dev/ttyUSB2_custom`: correspondía al **IMU**. Actualmente no se utiliza.
+   Esto garantiza que, sin importar el orden de conexión o reinicios, los dispositivos mantendrán sus rutas consistentes.
+
+3. **Inicio automatizado con Telegram y acceso SSH**  
+   El sistema Jetson está configurado con **`systemd`** para ejecutar un script al arrancar que envía un mensaje por **Telegram** con la dirección IP local del dispositivo. Esto permite saber la IP sin necesidad de conectar una pantalla o teclado.
+
+   Con esa IP, se puede acceder remotamente mediante SSH:
+   ```bash
+   ssh jumpers@<direccion_ip>
+   ```
+
+   Esto permite tanto modificar código como ejecutar el sistema remotamente. La edición de código puede realizarse de dos formas:
+   - Con el editor de texto nano directamente en terminal.
+   - Usando Visual Studio Code con la extensión Remote - SSH, lo que permite trabajar con la Jetson desde tu computadora como si fuera local.
