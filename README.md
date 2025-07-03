@@ -57,7 +57,9 @@ Los nodos que aplican esta corrección son:
 - `hybrid_navigation_node`
 - `navigation_node`
 
+<p align="justify">
 Estos ajustes aseguran que el comportamiento del robot en navegación, seguimiento de carriles y control manual sea coherente con la dirección real del movimiento.
+</p>
 
 ## Estructura del proyecto (Carpeta `software/` y `extra/`)
 
@@ -65,7 +67,9 @@ El código fuente del sistema Robocov se encuentra en la carpeta `software/`, or
 
 ### 1. Micro-ROS
 
+<p align="justify">
 Contiene todo lo relacionado con el microcontrolador **ESP32**, encargado del control de los motores a través de **VESC** y la recepción de comandos de velocidad desde ROS 2.
+</p>
 
 - `software/Micro-ROS/ros2_utilities_ws/`: Workspace de ROS 2 diseñado para ejecutarse en la computadora o en la Jetson Orin Nano, utilizado para pruebas y depuración en paralelo con Micro-ROS.
   
@@ -75,7 +79,9 @@ Contiene todo lo relacionado con el microcontrolador **ESP32**, encargado del co
 
 ### 2. ROS 2
 
+<p align="justify">
 Contiene el workspace de ROS 2 que se ejecuta en el sistema principal (Jetson Orin Nano o PC host). Está ubicado en `software/ROS2/` y sigue la estructura estándar de ROS 2 (`src/`, `build/`, `install/`, `log/`). Dentro de `src/` se encuentran los siguientes nodos:
+</p>
 
 #### Nodos activos principales:
 
