@@ -337,9 +337,6 @@ Sin embargo, para que el **planeador de rutas (A\*)** funcione de manera confiab
 - Marcar áreas restringidas por donde no debe pasar el robot.
 - Asegurar rutas seguras y evitar planeaciones ineficientes.
 
-> Se recomienda mantener **una versión cruda y otra editada** del mapa para localización y planeación.
-
-
 ## 🛠 Posibles fallas y soluciones
 
 A continuación se listan algunos problemas que pueden presentarse durante la operación del sistema, junto con sus causas y soluciones recomendadas:
