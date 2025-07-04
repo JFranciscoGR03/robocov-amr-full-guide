@@ -189,17 +189,43 @@ Para operar correctamente a Robocov se recomienda utilizar **tres terminales**:
 
 ### Inicialización del sistema
 
-Una vez ejecutados los tres procesos anteriores, es necesario inicializar los tópicos de Micro-ROS. Para ello:
+Una vez que la ESP32 esté conectada correctamente y Micro-ROS esté activo, se debe preparar **RViz** para visualizar correctamente el entorno y el estado del robot antes de asignar la posición inicial.
 
-- Se debe **resetear la ESP32**, lo cual puede hacerse de dos formas:
-  - Presionando el **botón rojo físico** ubicado en la caja de control del robot.
-  - Presionando el **botón izquierdo del control por radiofrecuencia**.
+Para ello:
 
-Esto permitirá que la ESP32 establezca conexión y comience a publicar/escuchar en los tópicos esperados.
+1. En la parte **inferior izquierda de RViz**, haz clic en el botón **“Add”**.
+2. Añade los siguientes elementos:
 
-### Estimación inicial de posición
+   - **TF** → Para visualizar las transformadas entre los distintos frames del robot.
+   - **RobotModel** → Para ver el cuerpo del robot.  
+     Luego, en la opción **“Topic”**, selecciona:  
+     ```
+     /robot_description
+     ```
+   - **Map** → Para visualizar el mapa del entorno.  
+     Luego, en la opción **“Topic”**, selecciona:  
+     ```
+     /map
+     ```  
+     Y en **“Durability Policy”**, cambia a:  
+     ```
+     Transient Local
+     ```
+   - **LaserScan** → Para visualizar el escaneo del LiDAR.  
+     Selecciona el tópico:  
+     ```
+     /scan
+     ```
+   - **PoseWithCovarianceStamped** → Para mostrar la **elipse de covarianza** generada por AMCL en la posición actual del robot.
+   - **Path** → Para visualizar la **ruta planeada** por el planeador A\*.  
+     En la opción **“Topic”**, selecciona:  
+     ```
+     /waypoints
+     ```
 
-Una vez que la ESP32 esté conectada, en **RViz** se debe asignar una posición inicial usando la herramienta **"2D Pose Estimate"** o publicando una `initial_pose`. Esto es esencial para que el nodo **AMCL** tenga una idea inicial de la ubicación del robot en el mapa.
+Una vez agregados todos estos elementos, ya es posible asignar una **posición inicial** al robot usando la herramienta **“2D Pose Estimate”** en RViz.
+
+Esto es esencial para que el nodo **AMCL** tenga una estimación inicial de la ubicación del robot en el mapa y pueda realizar una localización efectiva.
 
 > Este paso es obligatorio **cada vez que se lanza el sistema completo**, de lo contrario el robot no podrá localizarse correctamente y la navegación autónoma no funcionará.
 
