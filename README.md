@@ -319,7 +319,7 @@ Con esta configuración, se podrá observar cómo el mapa comienza a construirse
 
 Una vez que el recorrido haya finalizado y el mapa tenga buena consistencia visual, se procede a guardarlo utilizando el siguiente comando:
    ```bash
-   ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyUSB0_custom
+   ros2 run nav2_map_server map_saver_cli -f <ruta/donde/guardar/mapa>
    ```
 
 Esto generará dos archivos:
