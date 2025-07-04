@@ -4,14 +4,14 @@
   <img src="https://javier.rodriguez.org.mx/itesm/2014/tecnologico-de-monterrey-blue.png" alt="LogoTec" width="500"/>
 </p>
 
-## Colaboradores
+## 👤 Colaboradores
 
 - [Jennifer Lizeth Avendaño Sánchez](https://github.com/jennyavsaa) (@jennyavsaa)
 - [Juan Antonio Mancera Velasco](https://github.com/Juan-117) (@Juan-117)
 - [Juan Francisco García Rodríguez](https://github.com/JFranciscoGR03) (@JFranciscoGR03)
 - [Johan Donato Cabrera Martínez](https://github.com/JDonatoCM) (@JDonatoCM)
 
-## Descripción del sistema
+## 🤖 Descripción del sistema
 
 El sistema fue desarrollado sobre la plataforma robótica **Robocov**, un robot móvil diferencial con estructura de aluminio tipo perfil Bosch. Su forma general corresponde a un prisma rectangular de aproximadamente $0.84\text{m} \times 0.61\text{m} \times 0.25\text{m}$, con caras de acrílico negro que protegen los módulos internos. El acceso a componentes se realiza retirando únicamente la cara superior, lo que facilita el mantenimiento.
 
@@ -25,7 +25,7 @@ A nivel superficial, se integró una caja de control que aloja la **ESP32**, cir
   <img src="images/modelo_isometrico_robocov.png" alt="RobocovModel" width="300"/>
 </p>
 
-## Consideraciones de dirección y control
+## ⚙️ Consideraciones de dirección y control
 
 Inicialmente, se consideró que la parte delantera de Robocov sería como en un robot diferencial convencional, es decir, con las ruedas motrices al frente y las ruedas locas atrás. Por esta razón, el controlador **Flipsky VESC** fue configurado bajo esa suposición.
 
@@ -45,7 +45,7 @@ Los nodos que aplican esta corrección son:
 
 Estos ajustes aseguran que el comportamiento del robot en navegación, seguimiento de carriles y control manual sea coherente con la dirección real del movimiento.
 
-## Estructura del proyecto (Carpeta `software/` y `extra/`)
+## 🧠 Estructura del proyecto (Carpeta `software/` y `extra/`)
 
 El código fuente del sistema Robocov se encuentra en la carpeta `software/`, organizado en dos partes principales:
 
@@ -124,7 +124,7 @@ La carpeta `extra/` contiene archivos auxiliares necesarios para la operación c
   - `amcl_params.yaml`: Parámetros personalizados para el nodo de localización `AMCL`.
   - `camera_calibration.yaml`: Archivo con la calibración intrínseca de la cámara, útil si se requiere detección basada en visión (por ejemplo, YOLO o ArUco). Dentro de la Jetson, este archivo se encuentra en la ruta `.ros/camera_info`.
 
-## Consideraciones importantes
+## 🔒 Consideraciones importantes
 
 Antes de ejecutar el sistema Robocov, es importante considerar los siguientes aspectos para asegurar una experiencia fluida:
 
@@ -162,7 +162,7 @@ Antes de ejecutar el sistema Robocov, es importante considerar los siguientes as
    - Con el editor de texto nano directamente en terminal.
    - Usando Visual Studio Code con la extensión Remote - SSH, lo que permite trabajar con la Jetson desde tu computadora como si fuera local.
 
-## Uso del sistema
+## 🚀 Uso del sistema
 
 Para operar correctamente a Robocov se recomienda utilizar **tres terminales**:
 
@@ -247,7 +247,7 @@ Robocov incluye varias formas de detenerse de inmediato ante cualquier situació
 
 Estas tres opciones garantizan redundancia y seguridad operativa, tanto en entornos de prueba como de implementación real.
 
-## Posibles fallas y soluciones
+## 🛠 Posibles fallas y soluciones
 
 A continuación se listan algunos problemas que pueden presentarse durante la operación del sistema, junto con sus causas y soluciones recomendadas:
 
@@ -279,7 +279,7 @@ A continuación se listan algunos problemas que pueden presentarse durante la op
 - Si el robot se encuentra **muy alejado de su posición real en el mapa** y se le asigna una `initial_pose` incorrecta mediante la herramienta **"2D Pose Estimate"** en RViz, el **robot puede perder la referencia**, moverse de forma errática o tardar mucho en localizarse.
 - En estos casos, se recomienda repetir el proceso de estimación de pose **2 o 3 veces**, ajustando tanto la **posición** como la **orientación** hasta que el nodo **AMCL** logre una localización confiable y estable.
 
-## Posibles mejoras al sistema
+## 🔧 Posibles mejoras al sistema
 
 A continuación se listan algunas propuestas para futuras versiones de Robocov, con el objetivo de mejorar su rendimiento, integración y maniobrabilidad en entornos logísticos reales:
 
@@ -295,12 +295,12 @@ A continuación se listan algunas propuestas para futuras versiones de Robocov, 
 
 - **Cambio del control inalámbrico** por uno de mayor calidad y estabilidad, con mejor conexión Bluetooth o 2.4 GHz.
 
-## Funcionamiento del robot
+## 🎥 Funcionamiento del robot
 
 [Video de demostración de Robocov en Glaxo (prueba previa).](https://youtu.be/yPrvOlhJz0o)  
 [Video de demostración de Robocov en Aulas I (prueba final).](https://youtu.be/GQvPp4Hcdwo)
 
-## Notas finales
+## 📘 Notas finales
 
 Esta guía proporciona una **visión general del funcionamiento de Robocov**, incluyendo su estructura, uso y consideraciones técnicas esenciales.
 
