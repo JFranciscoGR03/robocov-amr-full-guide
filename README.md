@@ -265,7 +265,7 @@ Robocov incluye varias formas de detenerse de inmediato ante cualquier situació
 
 #### Paro físico por botón
 - El robot tiene un **botón físico de paro de emergencia**.
-- Al presionarlo, se **corta el voltaje de las llantas**, deteniendo el movimiento del robot de forma inmediata.
+- Al presionarlo, se **corta el voltaje desde la batería principal hacia las llantas**, deteniendo el movimiento del robot de forma inmediata.
 
 #### Paro por radiofrecuencia
 - En caso de estar lejos del robot, se puede usar el **control por radiofrecuencia**.
