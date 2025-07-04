@@ -273,6 +273,73 @@ Robocov incluye varias formas de detenerse de inmediato ante cualquier situació
 
 Estas tres opciones garantizan redundancia y seguridad operativa, tanto en entornos de prueba como de implementación real.
 
+## 🗺️ Remapeo
+
+Robocov puede funcionar en cualquier entorno con **control manual**, pero la **navegación autónoma solo ha sido probada exitosamente en Aulas I y el almacén de Glaxo**.
+
+Si se desea usar el robot de manera autónoma en un **nuevo entorno**, es necesario realizar un proceso de **mapeo previo**.
+
+### Preparación del sistema para mapeo
+
+1. Ejecutar el archivo `launch` del robot, pero **desactivando temporalmente todos los nodos que no se requieren**, dejando únicamente:
+
+   - Nodo de **odometría con EKF**
+   - Nodo del **gamepad** (joystick)
+   - **Transformadas estáticas y dinámicas** del robot
+
+   Esto se puede hacer **comentando los demás nodos** en el archivo de lanzamiento (`launch.py`) para evitar sobrecarga innecesaria.
+
+2. Asegurarse de que **Micro-ROS esté corriendo** correctamente en otra terminal:
+   ```bash
+   ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyUSB0_custom
+   ```
+
+### Mapeo con SLAM Toolbox
+
+Una vez lanzado el sistema base, se ejecuta `slam_toolbox` en modo asíncrono:
+   ```bash
+   ros2 launch slam_toolbox online_async_launch.py
+   ```
+
+Luego se abre **RViz**, y se añaden únicamente los siguientes elementos:
+
+- `TF` → para visualizar las transformadas.
+- `RobotModel` → para ver el cuerpo del robot.
+- `Map` → para visualizar el mapa que se está generando en tiempo real.
+
+Con esta configuración, se podrá observar cómo el mapa comienza a construirse conforme el robot se desplaza utilizando el control manual.
+
+### Consideraciones durante el mapeo
+
+- No es necesario preocuparse por obstáculos dinámicos (como personas), ya que no se integrarán en el mapa generado.
+- Es importante avanzar de forma lenta y constante, para que el LiDAR pueda escanear adecuadamente su entorno.
+- Se recomienda realizar un **closed loop**, es decir, finalizar el recorrido en el mismo punto donde se comenzó, para mejorar la coherencia y cierre del mapa.
+
+### Guardado del mapa
+
+Una vez que el recorrido haya finalizado y el mapa tenga buena consistencia visual, se procede a guardarlo utilizando el siguiente comando:
+   ```bash
+   ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyUSB0_custom
+   ```
+
+Esto generará dos archivos:
+
+- Un archivo `.pgm` con la imagen del mapa.
+- Un archivo `.yaml` con los parámetros de resolución, origen y ocupación.
+
+### Edición para navegación autónoma
+
+El **mapa crudo** es ideal para el proceso de **localización mediante AMCL**.
+
+Sin embargo, para que el **planeador de rutas (A\*)** funcione de manera confiable, es recomendable **editar el mapa** en un editor de imágenes como **GIMP**, para:
+
+- Dilatar zonas cercanas a obstáculos.
+- Marcar áreas restringidas por donde no debe pasar el robot.
+- Asegurar rutas seguras y evitar planeaciones ineficientes.
+
+> Se recomienda mantener **una versión cruda y otra editada** del mapa para localización y planeación.
+
+
 ## 🛠 Posibles fallas y soluciones
 
 A continuación se listan algunos problemas que pueden presentarse durante la operación del sistema, junto con sus causas y soluciones recomendadas:
